@@ -500,6 +500,45 @@ body {
 }
 .topbar { position: sticky; top: 0; z-index: 12; background: linear-gradient(94deg, #fffdf7, #fcfcf9 52%, #faf6ea); color: var(--ink); border-bottom: 1px solid #d9d3c6; box-shadow: 0 3px 18px #20202b0d; }
 .topbar-inner { min-height: 4.55rem; }
+.cave-frame {
+  position: fixed;
+  inset: 4.55rem 0 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+.cave-wall {
+  position: absolute;
+  inset-block: 0;
+  width: var(--cave-edge);
+  overflow: hidden;
+  filter: drop-shadow(0 1px 5px #483e3b1a);
+}
+.cave-wall--left { left: 0; }
+.cave-wall--right { right: 0; }
+.cave-wall svg { width: 100%; height: 100%; }
+.cave-wall--right svg { transform: scaleX(-1); }
+.cave-vine, .cave-lantern {
+  transform-box: fill-box;
+  transform-origin: center top;
+}
+body { --cave-edge: 10px; }
+@media (min-width: 52.01rem) {
+  body { --cave-edge: clamp(20px, 2.6vw, 24px); }
+}
+@media (min-width: 64rem) {
+  body { --cave-edge: clamp(3rem, 11vw - 3.8rem, 11rem); }
+  .layout { width: calc(100% - var(--cave-edge) * 2 + 2.35rem); }
+  .cave-vine, .cave-lantern { pointer-events: visiblePainted; }
+}
+@media (max-width: 63.99rem) {
+  .cave-wall { opacity: .63; }
+  .cave-wall svg { width: clamp(35px, 6vw, 65px); }
+  .cave-wall--right svg { position: absolute; right: 0; }
+}
+@media (max-width: 26rem) {
+  .cave-frame { top: 3.6rem; }
+}
 .brand { gap: .72rem; font-size: clamp(1.7rem, 3.4vw, 2.1rem); letter-spacing: -.052em; color: #28292c; }
 .brand img { width: 2.75rem; height: 2.75rem; border-radius: .66rem; box-shadow: 0 2px 8px #b2884833; }
 .layout { max-width: 85rem; grid-template-columns: 16.4rem minmax(0,1fr); }

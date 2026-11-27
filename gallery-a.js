@@ -22,13 +22,22 @@ const galleryA = (() => {
     return {selector: '.' + name, duration, frames, easing: beats ? 'linear' : 'ease-in-out'};
   }
 
+  const puzzleFit = 'M55 20h27v40H55V42c14 2 14-8 0-10Z';
+  const mazeRoute = 'M30 54V24h19v16h17V24h20v30';
+  const matchFade = (selector, frames) => ({selector, duration:1360, frames});
+  const matchedTokens = [{opacity:1}, {offset:.56,opacity:1}, {offset:.66,opacity:1,transform:'scale(1.13)'}, {offset:.79,opacity:0,transform:'scale(.42)'}, {opacity:0,transform:'scale(.42)'}];
+
   const genre = [
     item('Платформер', 'Расстояние между островками подсказывает, когда прыгать.', 'Платформер с видом сбоку. Герой преодолевает пропасти и добирается до выхода.',
       path('M10 59h37l-4 11H18Z',amber)+path('M9 57q7-5 13-2t13 0q8-4 13 1v5H9Z',sage)+path('M78 44h32l-5 11H82Z',amber)+path('M77 42q9-6 16-2t17-1v6H77Z',sage)+path('M19 65h6m4 2h7m50-17h5m5 2h5','none','#986645')+star(74,24)+part('hopper',path('M34 49q-3-7 4-13l1-9 6 6 8-4 1 10q5 15-12 15Z',gold)+path('m40 30 3 4m7 0 2-2','none',rose)+dot(48,40,1.65,ink)+path('m51 45 4-1m-15 7 6 1','none',amber)+path('m34 48-6-3 1 7 7 1',gold)),
       [move('hopper',1030,['translate(0,0)','translate(0,1px) scale(1.05,.94)','translate(16px,-17px) rotate(-5deg)','translate(31px,-22px)','translate(46px,-14px) scale(1.07,.91)','translate(46px,-14px)'],[0,.13,.34,.5,.75,1])]),
     item('Головоломка', 'Заметь закономерность и придумай ход, который изменит поле.', 'Головоломка с узорами. Игрок изучает расположение деталей и подбирает верный ход.',
-      box(22,22,49,41,5,amber)+path('M26 26h15v11q9-5 10 3t-10 3v15H26Z',sage)+path('M45 26h21v12H54q3 8-3 10t-6-3v-2q7 1 7-5t-7-4Z',ivory)+path('M47 59V48q8 6 11 0l1-6h8v17Z',blue)+part('tile',path('M78 21h15v11q8-5 10 1t-9 6v13H78V41q-8 4-9-2t9-6Z',red)+shine('M82 25h7')),
-      [move('tile',1030,['translate(0,0)','translate(-4px,-5px) rotate(9deg)','translate(-11px,0) rotate(3deg)','translate(-14px,5px) scale(1.03)','translate(-14px,5px)'],[0,.24,.55,.75,1])]),
+      box(19,16,69,50,5,steel)+box(24,20,58,40,2,'#ede5d4')+
+      path('M24 20h31v12c14 2 14 12 0 10v18H24Z',sage)+
+      path('M29 52q7-13 12-10l11 12','none','#63805e')+shine('M28 25h12m-12 3v7')+
+      `<path d="${puzzleFit}" fill="none" stroke="#ad805f" stroke-dasharray="2 3"/>`+
+      part('tile',`<g transform="translate(16 -7)">${path(puzzleFit,red)}${shine('M59 24h18m2 3v10')}${dot(70,32,4,'#ffe9a7')}${path('m61 55 8-11 8 11','none','#a95845')}</g>`),
+      [move('tile',1150,['translate(0,0)','translate(-3px,-3px) rotate(7deg)','translate(-12px,4px) rotate(2deg)','translate(-16px,7px)','translate(-16px,7px)'],[0,.22,.52,.76,1])]),
     item('Гонки', 'Выбирай траекторию, чтобы пройти поворот быстрее.', 'Аркадные гонки с поворотами, контрольными воротами и честным сравнением времени.',
       path('M9 63h94m-83 5h17m43 0h22','none',navy)+part('racer',path('m24 48 11-3 13-15h24l12 16 12 4 1 10H23Z',red)+path('m43 44 9-10h17l8 10Z',blue)+path('M60 34v10m3 5h6')+path('m47 40 7-5m9 2 4-2','none','#cbeced')+path('M24 50h6v4h-7Zm64 0 7 1v4h-7Z',ivory)+path('M50 56h18','none','#a95845')+dot(40,59,8,ink)+dot(40,59,3,ivory)+dot(80,59,8,ink)+dot(80,59,3,ivory))+path('M13 39h12m-7 6h7','none',amber),
       [move('racer',920,['translateX(0)','translateX(-8px) rotate(-2deg)','translateX(5px) rotate(-2deg)','translateX(14px) rotate(1.5deg)','translateX(14px) rotate(0deg)'],[0,.24,.4,.63,1])]),
@@ -57,8 +66,13 @@ const galleryA = (() => {
       path('m15 57 21-32 66 7-17 34Z',sage)+path('m23 54 16-23 54 5-12 23Z','none',ivory)+path('m54 58 6-32m-5 27 22-26m-20 21 16-18','none',navy)+part('ball',dot(46,27,7,gold)+path('m42 23q6 2 7 8','none',ivory))+path('m84 50-7 10 4 3 7-10Z',amber)+oval(91,44,8,12,red),
       [move('ball',1000,['translate(0,0)','translate(12px,-10px)','translate(25px,-11px)','translate(38px,9px)','translate(29px,-2px)'])]),
     item('Лабиринт', 'Ищи развилки, запоминай путь и находи выход.', 'Лабиринт с видом сверху. Игрок ориентируется по приметам и ищет путь к выходу.',
-      box(22,13,76,51,5,ivory)+path('M23 49h17V30h15V14m-15 49V51h28V32H56m12-6V14m14 13v22h15','none',navy)+star(89,55,4)+part('bead',dot(32,23,5,red)+dot(31,21,1.5,ivory,'none')),
-      [move('bead',1200,['translate(0,0)','translate(0,17px)','translate(0,0)','translate(13px,0)','translate(13px,0)'])])
+      box(18,12,80,54,5,steel)+box(22,16,72,46,3,ivory)+
+      `<path d="${mazeRoute}" fill="none" stroke="#b89964" stroke-opacity=".46" stroke-width="1" stroke-dasharray="1 3" stroke-linecap="round"/>`+
+      path('M39 32v30M57 16v16m0 16v14M74 32v23M39 48h11m7 4h9m8-7h5m-57-4h3','none',navy)+
+      `<path class="mazeRoute" d="${mazeRoute}" fill="none" stroke="#5b937f" stroke-width="2.1" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/>`+
+      star(86,54,4)+part('bead',dot(30,54,4.2,red)+dot(29,53,1.1,ivory,'none')),
+      [move('bead',1740,['translate(0,0)','translate(0,-30px)','translate(19px,-30px)','translate(19px,-14px)','translate(36px,-14px)','translate(36px,-30px)','translate(56px,-30px)','translate(56px,0)','translate(56px,0)'],[0,.182,.298,.395,.499,.596,.718,.90,1]),
+        {selector:'.mazeRoute', duration:1740, easing:'linear', frames:[{strokeDashoffset:'100'}, {offset:.90,strokeDashoffset:'0'}, {strokeDashoffset:'0'}]}])
   ];
 
 
@@ -110,7 +124,14 @@ const galleryA = (() => {
     item('Робот-садовник', 'Рабочая рука робота показывает, чем он занимается.', 'Приземистый робот-садовник на гусеницах. На спине резервуар, а вместо правой кисти — маленькая лейка.',
       box(34,49,46,14,7,navy)+dot(44,56,3,steel)+dot(55,56,3,steel)+dot(67,56,3,steel)+box(42,30,31,21,4,sage)+box(44,18,27,16,5,steel)+box(47,22,21,7,3,ink)+dot(52,25,1.5,gold)+dot(63,25,1.5,gold)+path('m74 37 9 5 5-6m0 0 10 3-2 8-11-3Z',blue)+path('m38 36-9 5 2 6')),
     item('Гоночный карт', 'Низкое сиденье и широкие колёса отличают карт от обычной машины.', 'Низкий золотистый карт с широкими колёсами, открытым рулём и алым стартовым номером.',
-      box(25,45,12,16,4,ink)+box(79,41,12,16,4,ink)+box(47,51,13,14,4,ink)+path('m27 45 30-18 29 11-30 20Z',gold)+path('m27 45 29 13 30-20v8L56 65 27 52Z',amber)+path('m49 37 7-13 13 4-4 12Z',red)+oval(69,35,6,3,ink)+path('m37 45 11 5m-6-8 12 5','none',ivory)),
+      oval(63,64,43,5,'#786553','none')+box(29,42,16,12,5,'#414450')+box(76,38,14,11,4,'#414450')+
+      path('m21 51 9-9 24-10 24 6 19 9 2 6-16 8-44 3-17-7Z',amber)+
+      path('m21 51 9-9 22-10 25 6 19 9-14 8-39 4Z',gold)+
+      path('m43 45-2-12q0-5 5-6l12 2 2 10-10 7Z',navy)+path('m46 43 2-7 11 2 3 4-9 5Z',blue)+
+      path('M65 44 69 35','none',ink)+oval(70,33,6,2.7,'#525260')+
+      path('m77 45 8 3-5 4-9-3Z',red)+shine('m76 48 3 .6m-20 1 7-3')+
+      dot(36,59,8.5,ink)+dot(36,59,3.8,steel)+dot(84,58,8,ink)+dot(84,58,3.4,steel)+
+      path('m23 54 4 2m22 4 21-1m27-4 4-2','none','#f8dca0')),
     item('Лис-курьер', 'Сумка для писем и заметный хвост пригодятся для анимации бега.', 'Проворный лис в синем шарфике. Через плечо у него сумка писем, а на конце хвоста белая кисточка.',
       path('M54 48q-13-16-30-7 14-1 15 11 3 11 20 8Z',red)+path('M24 41q8-4 16-1l-4 6Z',ivory)+path('M52 39q13-5 20 4l1 15-7 5-5-6-7 4-6-3Z',red)+path('m48 32-1-16 12 9 10-1 12-9-1 19-12 12-10-1Z',red)+path('m49 34 14 5 17-6-13 12-9-1Z',ivory)+dot(64,39,2,ink)+path('m54 46 15 3 7-3-1 6-18-1Z',blue)+box(55,51,10,9,2,amber)),
     item('Капля дождя', 'Выразительное лицо делает героя заметным без сложной одежды.', 'Живая голубая капля с прозрачными краями, круглыми глазами и жёлтым зонтиком.',
@@ -133,7 +154,15 @@ const galleryA = (() => {
     item('Город сверху', 'С высоты видны перекрёстки и удобные короткие пути.', 'Город с видом сверху, дорожными развязками, тихой площадью и парком с прудом.',
       box(19,15,82,48,5,sage)+path('M19 35h82v10H19Zm42-20h9v48h-9Z',steel)+box(28,20,23,10,2,red)+box(26,48,12,9,1,amber)+box(42,49,13,9,1,lilac)+oval(85,24,9,5,blue)+path('M21 40h11m8 0h11m26 0h10m-22 9v8','none',ivory)),
     item('Подводный мир 3D', 'Передние кораллы крупнее дальних. Камера смотрит глазами героя.', 'Настоящий объёмный подводный мир от первого лица. Игрок плывёт между кораллами к затонувшему кораблю.',
-      path('M14 60q22-8 43-1t48-5l-1 11H15Z',amber)+path('M30 60V39m0 11-8-9m8 5 8-11m-16 6v-5','none',red)+path('m51 45 29-4-5 10-19 3Z',navy)+path('m65 42-2-17 12 11-10 3Z',ivory)+path('M90 61q-8-15 2-24-3 12 6 16-2-13 5-17','none',leaf)+dot(41,25,3,blue)+dot(46,18,2,blue)),
+      path('M15 53q12-25 34-32 19-9 49 9 10 5 9 25l-2 10H15Z','#a7d0d5','none')+
+      path('M16 59q22-9 43-1t47-2v9H16Z',amber)+
+      path('M27 58V38m0 12-8-9m8 5 10-11m-17 7v-5m13 8 4 1','none',red)+
+      `<g transform="rotate(13 64 50)">
+        ${path('M43 48h43l-9 11H52Z',navy)}${path('M58 48V23m16 24V37m-13-10 13 10-5 1-3 6-5-3Z',ivory)}
+        ${path('M47 51h34m-27 4h5m5 0h8','none','#b8c5c6')}
+      </g>`+
+      path('M90 59q-8-15 2-25-3 12 6 16-2-13 5-16','none',leaf)+
+      path('m80 26 6 2 4-2v4l-4-2','none','#4e8091')+dot(43,27,2.1,blue)+dot(48,19,1.7,blue)),
     item('Мастерская в разрезе', 'Вид сбоку открывает сразу оба этажа маленького дома.', 'Мастерская в разрезе. Внизу стоят верстаки, наверху часы и ящики, этажи соединяет деревянная лестница.',
       path('M24 62V27l36-15 36 15v35Z',ivory)+path('M19 27 60 9l41 18-2 5-39-16-39 16Z',red)+path('M25 42h70M53 61l11-21m-7 14h7m-3-6h7')+box(32,48,15,7,2,amber)+path('M34 55v6m11-6v6')+dot(76,31,6,gold)+path('M76 27v4l3 2')),
     item('Парящие острова', 'Изометрический вид показывает и поверхность острова, и его боковые грани.', 'Цепочка парящих островов в изометрическом виде. Острова соединены мостиками, внизу медленно плывут облака.',
@@ -152,20 +181,42 @@ const galleryA = (() => {
 
   const actions = [
     item('Двойной прыжок', 'Первый прыжок от земли. Пока герой опускается, второе нажатие позволяет подняться выше.', 'Герой бегает и прыгает. Между отрывом от земли и приземлением разрешён ровно один дополнительный прыжок.',
-      path('M14 64h39v6H14Zm65-24h28v6H79Z',amber)+path('M14 64h39m26-24h28','none',leaf)+path('M19 68h5m3 0h5m53-24h5m3 0h5','none',ivory)+part('jumper',path('M25 56V45l6-5 9 2 6 7-1 10-7 4h-8Z',lilac)+path('M25 49h20l-3 5H28Z',navy)+path('m29 46 3-2 5 1','none',ivory)+dot(38,51,1.2,ivory)+path('m29 60-3 3m14-4 4 3'))+part('boost',path('m53 39 4 5 4-5m-9 6 5 4 5-4','none',amber)),
-      [move('jumper',1420,['translate(0,0)','translate(9px,-17px)','translate(19px,-24px)','translate(27px,-17px)','translate(37px,-33px)','translate(45px,-36px)','translate(54px,-24px) scale(1.06,.92)','translate(54px,-24px)'],[0,.17,.29,.45,.57,.68,.84,1]),{selector:'.boost',duration:1420,frames:[{opacity:.25},{offset:.41,opacity:.25},{offset:.49,opacity:1,transform:'scale(1.12)'},{offset:.75,opacity:.15},{opacity:.25}]}]),
+      path('M12 63h34v7H12Zm65-15h31v7H77Z',amber)+path('M12 63h34m31-15h31','none',leaf)+
+      '<path d="M37 50Q47 15 62 37Q73 1 92 33" fill="none" stroke="#a9895d" stroke-width="1.25" stroke-dasharray="2 3"/>'+
+      part('boost',path('m55 43 4 3m3-4 0 5m5-4-3 4','none',amber))+
+      part('jumper',path('M20 57q1-8 13-9 10 3 7 11-3 5-12 3-6 2-11-1 0-3 3-4Z',leaf)+
+        path('M19 60q6-5 11 0m3-2 4 4h6','none','#3f6b51')+
+        dot(27,48,5,sage)+dot(36,47,5,sage)+dot(29,47,2,ivory)+dot(38,46,2,ivory)+
+        dot(30,47,1,ink)+dot(39,46,1,ink)+path('M37 53q3 1 5-2m-14 3 4-2','none','#385647')),
+      [move('jumper',1500,['translate(0,0)','translate(0,1px) scale(1.09,.92)','translate(16px,-25px)','translate(29px,-13px)','translate(41px,-29px)','translate(51px,-36px)','translate(58px,-16px) scale(1.08,.93)','translate(58px,-16px)'],[0,.1,.28,.43,.58,.67,.87,1]),{selector:'.boost',duration:1500,frames:[{opacity:.32},{offset:.4,opacity:.32},{offset:.48,opacity:1},{offset:.71,opacity:.2},{opacity:.32}]}]),
     item('Рывок', 'Короткое ускорение перемещает героя вперёд. Затем способность должна восстановиться.', 'Игрок мгновенно ускоряется в выбранную сторону на короткое расстояние. После рывка есть перезарядка 3 секунды.',
-      path('M18 59h83','none',steel)+path('m68 24 8 8-8 8m11-16 8 8-8 8','none',amber)+part('dashBody',path('m32 44 11-16 12 2 11 10-6 8-9-3-9 9-12-3Z',red)+path('m44 33 10 1 8 7-11-2Z',ivory)+path('m32 50-8 6 10 1 9-4',navy))+part('speed',path('M13 36h14m-16 7h12m-6 6h7','none',amber)),
-      [move('dashBody',820,['translate(0,0)','translate(-5px,2px) rotate(-5deg)','translate(22px,-1px) rotate(5deg) scale(1.12,.93)','translate(36px,0)','translate(36px,0)'],[0,.27,.39,.55,1]),{selector:'.speed',duration:820,frames:[{opacity:.2},{offset:.24,opacity:.6},{offset:.39,opacity:1,transform:'scaleX(1.8)'},{offset:.64,opacity:.2},{opacity:0}]}]),
+      path('M14 64h94','none',steel)+path('m68 30 7 5-7 5m11-12 9 7-9 7','none',amber)+
+      part('speed',path('M12 34h17M9 42h17m-11 7h10m-10 8h6','none','#c99a61'))+
+      part('dashBody',path('m48 33-14 4-10-2 9-4 10-2Z',red)+
+        path('m45 45-9 4-7 11h-7l7-15 10-6Z',navy)+path('m45 43 10 7 11 2-2 5-14-2-10-8Z',blue)+
+        path('M36 42q4-11 12-12l10 8-9 6-5 5Z',blue)+path('m47 36 7 7 6-2 3 3-11 6-8-7Z',steel)+
+        path('M52 22q6-5 11 1l2 7-5 6-8-3-2-6Z',rose)+
+        path('M49 28q-1-8 6-10 10-1 12 8l-8 1-4-2-3 5Z',navy)+dot(61,29,1,ink)+
+        shine('m52 22 4-2m-17 19 3-4m-15 23 3-4')),
+      [move('dashBody',850,['translate(0,0)','translate(-4px,2px) rotate(-6deg)','translate(19px,-2px) rotate(5deg) scale(1.07,.96)','translate(39px,0)','translate(39px,0)'],[0,.24,.37,.56,1]),{selector:'.speed',duration:850,frames:[{opacity:.3},{offset:.24,opacity:.6},{offset:.39,opacity:1,transform:'scaleX(1.8)'},{offset:.64,opacity:.25},{opacity:.3}]}]),
     item('Три в ряд', 'Обменяй соседние фишки, чтобы собрать одинаковые в линию.', 'Игрок меняет местами две соседние фишки. Ряд из трёх одинаковых исчезает, поле заполняется сверху.',
-      box(22,15,76,49,5,ivory)+path('M47 16v47m26-47v47M23 40h74','none',steel)+dot(35,51,7,gold)+dot(60,51,7,gold)+path('m30 25 5-5 5 5-5 6Z',blue)+path('m55 28 5-6 5 6-5 6Z',lilac)+part('swapStar',dot(85,27,7,gold)+shine('m82 25 3-2'))+part('swapGem',path('m79 51 6-7 6 7-6 7Z',red)),
-      [move('swapStar',940,['translateY(0)','translate(-3px,11px)','translateY(24px)','translateY(24px) scale(1.23)','translateY(24px) scale(.1)']),move('swapGem',940,['translateY(0)','translate(3px,-11px)','translateY(-24px)','translateY(-24px)','translateY(-24px)'])]),
+      box(22,15,76,49,5,ivory)+path('M47 16v47m26-47v47M23 40h74','none',steel)+
+      part('matchLeft',dot(35,51,7,gold)+shine('m32 49 2-2'))+part('matchCenter',dot(60,51,7,gold)+shine('m57 49 2-2'))+
+      part('fallLeft',path('m30 27 5-5 5 5-5 6Z',blue))+part('fallCenter',path('m55 27 5-6 5 6-5 6Z',lilac))+
+      part('swapStar',part('matchRight',dot(85,27,7,gold)+shine('m82 25 3-2')))+part('swapGem',path('m79 51 6-7 6 7-6 7Z',red)),
+      [move('swapStar',1360,['translateY(0)','translate(-3px,11px)','translateY(24px)','translateY(24px)'],[0,.29,.51,1]),
+        move('swapGem',1360,['translateY(0)','translate(3px,-11px)','translateY(-24px)','translateY(-24px)','translateY(0)'],[0,.29,.51,.79,1]),
+        ...['.matchLeft','.matchCenter','.matchRight'].map(selector=>matchFade(selector,matchedTokens)),
+        ...['fallLeft','fallCenter'].map(name=>move(name,1360,['translateY(0)','translateY(0)','translateY(24px)'],[0,.79,1]))]),
     item('Ключ и замок', 'Подбери ключ с нужной формой и используй его у двери.', 'Игрок находит ключи разной формы и может открыть дверь только соответствующим ключом.',
       path('M69 61V28q12-16 24 0v33Z',amber)+path('M76 58V31q6-9 12 0v27Z',ivory)+dot(82,44,4,ink)+path('m82 46-2 6h4Z',ink)+part('unlockKey',dot(36,45,9,gold)+dot(36,45,4,ivory)+path('M45 42h22v7h-4v4h-5v-5H45Z',gold)),
       [move('unlockKey',1050,['translateX(-5px)','translateX(15px)','translateX(17px) rotate(0deg)','translateX(17px) rotate(-18deg)','translateX(17px) rotate(0deg)'])]),
     item('Крюк-кошка', 'Прицепись к отмеченной точке и качнись через провал.', 'Игрок цепляется крюком за отмеченные балки, раскачивается и отпускает трос над следующей площадкой.',
-      path('M27 17h58v7H27Z',amber)+dot(62,22,4,steel)+part('swing',`<g style="transform-origin:62px 22px">${path('M61 23 42 50','none',navy)}${dot(41,53,6,red)}${path('m40 58-7 6m10-8 7 6')}</g>`)+path('M12 65h28m38-7h28','none',leaf),
-      [{selector:'.swing',duration:1350,frames:[{transformOrigin:'100% 0%',transform:'rotate(0deg)'},{transformOrigin:'100% 0%',transform:'rotate(12deg)'},{transformOrigin:'100% 0%',transform:'rotate(-45deg)'},{transformOrigin:'100% 0%',transform:'rotate(-70deg)'},{transformOrigin:'100% 0%',transform:'rotate(-52deg)'}]}]),
+      path('M27 17h58v7H27Z',amber)+path('M13 65h26v5H13Zm67-7h26v5H80Z',leaf)+
+      '<path d="M37 58Q62 75 94 52" fill="none" stroke="#bea87a" stroke-dasharray="2 3"/>'+
+      `<g transform="translate(62 23)"><g class="swing" style="transform-box:fill-box;transform-origin:right top">${path('M0 0-19 25','none',navy)}${dot(-21,28,6,red)}${path('m-25 34-4 4m11-4 5 3')}${shine('m-24 27 2-2')}</g></g>`+
+      dot(62,22,4,steel),
+      [move('swing',1320,['rotate(0deg)','rotate(9deg)','rotate(-46deg)','rotate(-68deg)','rotate(-61deg)'],[0,.17,.48,.78,1])]),
     item('Перенос ящика', 'Толкай ящик на плиту. Для толчка позади героя должно быть свободно.', 'Герой толкает по одному ящику на соседнюю свободную клетку. Ящик на нажимной плите открывает проход.',
       path('M15 61h90','none',steel)+path('m68 59 5-6h21l6 6Z',blue)+part('pushBox',box(37,36,23,23,2,amber)+path('m40 39 17 17m-17 0 17-17','none',ivory))+part('pushHand',path('m17 47 6-4 7 5 7 1-2 6H22l-7-4Z',rose))+path('M77 43h10m-4-4 4 4-4 4','none',navy),
       [move('pushBox',1240,['translateX(0)','translateX(0)','translateX(16px)','translateX(16px)','translateX(32px)','translateX(32px)'],[0,.22,.44,.55,.81,1]),move('pushHand',1240,['translateX(-4px)','translateX(1px)','translateX(17px)','translateX(15px)','translateX(33px)','translateX(29px)'],[0,.22,.44,.55,.81,1])]),
