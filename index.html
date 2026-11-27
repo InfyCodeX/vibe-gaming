@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#292a2c">
+  <meta name="description" content="Vibe Gaming помогает собрать промпт для своей браузерной игры.">
+  <title>Vibe Gaming — мастерская игр</title>
+  <link rel="icon" type="image/svg+xml" href="./Arcade-Prompt.svg">
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="./art.js"></script>
+  <script defer src="./gallery-a.js"></script>
+  <script defer src="./gallery-b.js"></script>
+  <script defer src="./gallery-c.js"></script>
+  <script defer src="./content.js"></script>
+  <script defer src="./prompt.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#workspace">К рабочей области</a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <img src="./Arcade-Prompt.svg" alt="" width="43" height="43">
+        <span>Vibe<span class="brand-accent"> Gaming</span></span>
+      </div>
+      <button type="button" class="toolbox-open" data-toolbox aria-haspopup="dialog" aria-label="Доработать игру"><span id="tools-icon" aria-hidden="true"></span><span>Доработать<span class="toolbox-tail"> игру</span></span></button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <h1 id="hero-title">Придумай игру.<br>Собери <em>промпт.</em></h1>
+        <p>Пройди 10 этапов и получи готовый запрос для ИИ, который напишет твою игру.</p>
+      </div>
+      <img class="hero-art" src="./assets/arcade.svg" alt="" width="480" height="254" fetchpriority="high">
+    </section>
+
+    <aside class="route" aria-labelledby="route-title">
+      <div class="route-heading">
+        <h2 id="route-title">Твой маршрут</h2>
+        <p>Заполняй в любом порядке</p>
+      </div>
+      <nav class="step-nav" aria-label="Этапы создания игры" id="step-nav"></nav>
+      <div class="route-progress">
+        <div class="progress-label">
+          <label for="progress-bar">Прогресс</label>
+          <span id="progress-count">0 из 10</span>
+        </div>
+        <progress id="progress-bar" value="0" max="10"></progress>
+      </div>
+      <button class="generate-button" id="generate" type="button" disabled>
+        <span class="generate-icon" id="generate-icon" aria-hidden="true"></span>
+        <span id="generate-label">Собрать промпт</span>
+      </button>
+      <p class="route-note" id="route-note">Заполни все этапы, чтобы собрать промпт.</p>
+    </aside>
+
+    <section class="workspace" id="workspace" aria-label="Рабочая область" tabindex="-1">
+      <div id="editor"></div>
+      <noscript><p class="noscript">Включи JavaScript в браузере, чтобы заполнять этапы и собирать промпт.</p></noscript>
+    </section>
+  </main>
+
+  <dialog id="toolbox-dialog" class="toolbox-dialog" aria-labelledby="toolbox-title">
+    <div class="toolbox-heading"><h2 id="toolbox-title">Доработай игру</h2><form method="dialog"><button type="submit" aria-label="Закрыть запросы">×</button></form></div>
+    <p>Скопируй запрос в тот чат, где ИИ написал игру.</p>
+    <div class="improvement-grid" id="improvement-grid"></div>
+  </dialog>
+  <dialog class="copy-dialog" id="copy-dialog" aria-labelledby="copy-title">
+    <div class="dialog-body">
+      <h2 id="copy-title">Копирование вручную</h2>
+      <p>Браузер заблокировал автокопирование. Скопируй выделенный текст через меню или сочетанием Ctrl+C (⌘C на Mac).</p>
+      <label class="sr-only" for="manual-text">Текст для копирования</label>
+      <textarea id="manual-text" readonly rows="6"></textarea>
+      <form method="dialog"><button class="plain-button" type="submit">Закрыть</button></form>
+    </div>
+  </dialog>
+  <div class="sr-only" id="announcement" role="status" aria-atomic="true"></div>
+</body>
+</html>
