@@ -25,6 +25,28 @@ function icon(name, className = '') {
   return '<svg class="' + className + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + lineIcons[name] + '</svg>';
 }
 
+// Keep the drawn contours and motion layers while giving each fill a lit edge.
+function paintedArt(art, prefix) {
+  const paints = new Map();
+  const shapes = art.replace(/\bfill="#([\da-f]{6})"/gi, (original, hex) => {
+    hex = hex.toLowerCase();
+    const color = hex.match(/../g).map(channel => parseInt(channel, 16));
+    if (Math.max(...color) < 105) return original;
+    if (!paints.has(hex)) {
+      const tint = color.map(channel => Math.round(channel + (255 - channel) * 0.29));
+      const shade = color.map((channel, index) => Math.round(channel * 0.86 + [44, 37, 49][index] * 0.14));
+      const rgb = channels => 'rgb(' + channels.join(' ') + ')';
+      paints.set(hex, `<linearGradient id="${prefix}-${hex}" x1="0%" y1="0%" x2="75%" y2="100%"><stop stop-color="${rgb(tint)}"/><stop offset=".46" stop-color="#${hex}"/><stop offset="1" stop-color="${rgb(shade)}"/></linearGradient>`);
+    }
+    return 'fill="url(#' + prefix + '-' + hex + ')"';
+  });
+  return '<defs>' + [...paints.values()].join('') + '</defs>' + shapes;
+}
+
+function cardIllustration(art, id) {
+  return '<svg class="example-art" viewBox="0 0 120 78" aria-hidden="true"><g fill="none" stroke="#34353b" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">' + paintedArt(art, id) + '</g></svg>';
+}
+
 const toolArt = {
   graphics: '<path d="m7 31 14-22 15 23-15 9Z" fill="#e5b961"/><path d="m13 28 8-13 8 13-7-3-3 5Z" fill="#fff1cc"/><path d="m24 34 11-18 5 3-12 18-5 3Z" fill="#87aaa8"/><path d="m34 18 4 3"/>',
   repair: '<path d="M12 9h17l5 5v22H12Z" fill="#dae6db"/><path d="M17 16h8m-8 5h10m-10 5h6"/><path d="m24 37 5-11c-2-6 2-10 7-9l-2 5 3 2 3-4c2 5-2 11-7 10l-5 9Z" fill="#dbac73"/>',
@@ -35,5 +57,5 @@ const toolArt = {
 };
 
 function toolIllustration(id) {
-  return '<svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="#3d3c40" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' + toolArt[id] + '</g></svg>';
+  return '<svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="#3d3c40" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' + paintedArt(toolArt[id], 'tool-' + id) + '</g></svg>';
 }

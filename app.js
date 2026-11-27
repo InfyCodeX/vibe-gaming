@@ -110,9 +110,9 @@ function renderOptions(field) {
     const index = start + position;
     const tipId = field.id + '-tip-' + index;
     return `<div class="example" data-tone="${tones[index % tones.length]}">
-      <button class="example-choice" draggable="true" type="button" data-choice="${index}" aria-pressed="false" aria-describedby="${tipId}">
+      <button class="example-choice" draggable="true" type="button" data-choice="${index}" aria-describedby="${tipId}">
         <span class="touch-grip" aria-hidden="true">⠿</span>
-        <svg class="example-art" viewBox="0 0 120 78" aria-hidden="true"><g fill="none" stroke="#34353b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${option.art}</g></svg>
+        ${cardIllustration(option.art, 'art-' + field.id + '-' + index)}
         <span class="example-label">${option.title}</span>
       </button>
       <button class="info-button" type="button" aria-label="Объяснить пример «${option.title}»" aria-expanded="false" aria-controls="${tipId}">?</button>
@@ -145,7 +145,7 @@ function renderField(field) {
     </div>
     <div class="examples" role="group" aria-label="Примеры. ${field.label}">${renderOptions(field)}</div>
     <div class="answer">${field.id === 'genre' ? label : ''}<div class="drop-zone">
-      <span class="drop-hint">Перетащи пример сюда или напиши свой вариант</span>${input}
+      <span class="drop-hint"><span class="drop-idle">Перетащи пример сюда или напиши свой вариант</span><span class="drop-ready" aria-hidden="true">Отпусти карточку здесь</span></span>${input}
     </div></div>
   </section>`;
 }
@@ -176,7 +176,7 @@ function renderStage(stage) {
 function updateField(field, wrapper) {
   const value = draft.answers[field.id];
   for (const button of wrapper.querySelectorAll('[data-choice]')) {
-    button.setAttribute('aria-pressed', String(field.options[Number(button.dataset.choice)].value === value));
+    button.toggleAttribute('data-applied', field.options[Number(button.dataset.choice)].value === value);
   }
   const page = pages.get(field.id) || 0;
   const start = page * pageSize;
@@ -232,6 +232,7 @@ function activateStage(id) {
 
 function showResult() {
   if (!stages.every(isStageComplete)) return;
+  cancelDrag();
   closeTip();
   if (showingResult) {
     focusWorkspace();
@@ -248,11 +249,10 @@ function showResult() {
     <label class="sr-only" for="prompt-output">Готовый промпт</label>
     <textarea id="prompt-output" class="prompt-output" readonly rows="12"></textarea>
     <div class="result-actions">
-      <button class="plain-button" type="button" data-edit>${icon('edit')} Вернуться к этапам</button>
+      <button class="plain-button" type="button" data-toolbox aria-haspopup="dialog">${icon('tools')} Запросы для доработки игры</button>
       <button class="primary-button" type="button" data-copy="main">${icon('copy')} <span>Скопировать промпт</span></button>
     </div>
-  </div>
-  <div class="more-prompts"><button type="button" data-toolbox class="plain-button" aria-haspopup="dialog">Запросы для доработки игры</button></div>`;
+  </div>`;
   editor.querySelector('#prompt-output').value = generatedPrompt;
   updateProgress();
   focusWorkspace();
@@ -340,21 +340,68 @@ async function copyPrompt(trigger) {
 let drag = null;
 let touchScrollFrame = 0;
 let suppressTouchClick = false;
+const answerReveals = new WeakMap();
 
-function selectExample(wrapper, button) {
+function finishAnswerReveal(input) {
+  const reveal = answerReveals.get(input);
+  if (!reveal) return;
+  cancelAnimationFrame(reveal.frame);
+  input.value = reveal.value;
+  answerReveals.delete(input);
+}
+
+function revealAnswer(input, value) {
+  if (document.activeElement === input || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const reveal = {value, frame: 0};
+  const characters = Array.from(value);
+  const start = performance.now();
+  const duration = Math.min(380, 160 + characters.length * 2);
+  input.value = '';
+  answerReveals.set(input, reveal);
+
+  function draw(now) {
+    if (!input.isConnected || now >= start + duration) {
+      finishAnswerReveal(input);
+      return;
+    }
+    const progress = Math.max(0, (now - start) / duration);
+    input.value = characters.slice(0, Math.ceil(progress * characters.length)).join('');
+    reveal.frame = requestAnimationFrame(draw);
+  }
+  reveal.frame = requestAnimationFrame(draw);
+}
+
+function applyDroppedExample(wrapper, button) {
   const field = fieldsById.get(wrapper.dataset.field);
   const option = field.options[Number(button.dataset.choice)];
   const input = wrapper.querySelector('input, textarea');
+  finishAnswerReveal(input);
   const previous = draft.answers[field.id];
   if (option.value !== previous) {
     if (isFilled(previous)) previousAnswers.set(field.id, previous);
     input.value = option.value;
-    updateAnswer(field, wrapper, input.value);
+    const value = input.value;
+    updateAnswer(field, wrapper, value);
+    revealAnswer(input, value);
   }
+
+  const dropZone = input.closest('.drop-zone');
+  if (dropZone.animate && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    for (const animation of dropZone.getAnimations()) animation.cancel();
+    dropZone.animate([
+      {boxShadow: '0 0 0 2px #c58f34, 0 0 22px #ffc14d7a', backgroundColor: '#fff2d6'},
+      {boxShadow: '0 0 0 7px #c58f3400, 0 0 28px #ffc14d00', backgroundColor: '#faf9f6'}
+    ], {duration: 500, easing: 'ease-out'});
+  }
+}
+
+function playExample(button, option) {
+  if (!option.motion) return;
   closeTip(true);
   button.closest('.example').classList.add('tip-muted');
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  for (const track of option.motion || []) {
+  for (const track of option.motion) {
     const element = button.querySelector(track.selector);
     if (!element?.animate) continue;
     for (const animation of element.getAnimations()) animation.cancel();
@@ -406,7 +453,7 @@ editor.addEventListener('dragleave', event => {
 document.addEventListener('drop', event => {
   if (!drag) return;
   event.preventDefault();
-  if (isDropTarget(event.target)) selectExample(drag.wrapper, drag.button);
+  if (isDropTarget(event.target)) applyDroppedExample(drag.wrapper, drag.button);
   cancelDrag();
 });
 document.addEventListener('dragend', cancelDrag);
@@ -416,6 +463,13 @@ window.addEventListener('blur', cancelDrag);
 function updateTouchTarget() {
   const target = document.elementFromPoint(drag.x, drag.y);
   drag.wrapper.classList.toggle('drag-over', Boolean(isDropTarget(target)));
+}
+
+function positionTouchGhost() {
+  const margin = 78;
+  drag.ghost.style.left = Math.max(margin, Math.min(innerWidth - margin, drag.x)) + 'px';
+  drag.ghost.style.top = drag.y + 'px';
+  drag.ghost.classList.toggle('drag-ghost-below', drag.y < 115);
 }
 
 function scrollWhileDragging() {
@@ -440,9 +494,14 @@ editor.addEventListener('pointerdown', event => {
   drag.y = event.clientY;
   drag.ghost = document.createElement('div');
   drag.ghost.className = 'drag-ghost';
-  drag.ghost.textContent = button.querySelector('.example-label').textContent;
-  drag.ghost.style.left = drag.x + 'px';
-  drag.ghost.style.top = drag.y + 'px';
+  drag.ghost.setAttribute('aria-hidden', 'true');
+  drag.ghost.dataset.tone = button.closest('.example').dataset.tone;
+  const option = fieldsById.get(drag.wrapper.dataset.field).options[Number(button.dataset.choice)];
+  drag.ghost.innerHTML = cardIllustration(option.art, 'drag-art');
+  const title = document.createElement('span');
+  title.textContent = option.title;
+  drag.ghost.append(title);
+  positionTouchGhost();
   document.body.append(drag.ghost);
   button.setPointerCapture(event.pointerId);
   touchScrollFrame = requestAnimationFrame(scrollWhileDragging);
@@ -451,13 +510,12 @@ editor.addEventListener('pointermove', event => {
   if (drag?.pointerId !== event.pointerId) return;
   drag.x = event.clientX;
   drag.y = event.clientY;
-  drag.ghost.style.left = drag.x + 'px';
-  drag.ghost.style.top = drag.y + 'px';
+  positionTouchGhost();
   updateTouchTarget();
 });
 editor.addEventListener('pointerup', event => {
   if (drag?.pointerId !== event.pointerId) return;
-  if (isDropTarget(document.elementFromPoint(event.clientX, event.clientY))) selectExample(drag.wrapper, drag.button);
+  if (isDropTarget(document.elementFromPoint(event.clientX, event.clientY))) applyDroppedExample(drag.wrapper, drag.button);
   suppressTouchClick = true;
   setTimeout(() => { suppressTouchClick = false; }, 0);
   cancelDrag();
@@ -473,7 +531,6 @@ stepNav.innerHTML = stages.map(stage => `<button type="button" class="step-butto
   <span class="step-icon">${icon(stage.id)}</span><span class="step-name">${stage.title}</span>
   <span class="step-check" aria-hidden="true"></span><span class="step-status sr-only"></span>
 </button>`).join('');
-document.querySelector('#tools-icon').innerHTML = icon('tools');
 document.querySelector('#improvement-grid').innerHTML = improvements.map(item => `
   <article class="improvement" data-tone="${item.tone}">
     <span class="improvement-icon">${toolIllustration(item.id)}</span>
@@ -499,9 +556,18 @@ editor.addEventListener('input', event => {
   const wrapper = event.target.closest('[data-field]');
   if (!wrapper || !event.target.matches('input, textarea')) return;
   const field = fieldsById.get(wrapper.dataset.field);
+  const reveal = answerReveals.get(event.target);
+  if (reveal) {
+    cancelAnimationFrame(reveal.frame);
+    answerReveals.delete(event.target);
+  }
   previousAnswers.delete(field.id);
   updateAnswer(field, wrapper, event.target.value);
 });
+
+for (const type of ['focusin', 'pointerdown', 'beforeinput']) {
+  editor.addEventListener(type, event => finishAnswerReveal(event.target));
+}
 
 editor.addEventListener('click', event => {
   if (suppressTouchClick) return;
@@ -528,8 +594,9 @@ editor.addEventListener('click', event => {
       return;
     }
     if (button.matches('[data-choice]')) {
-      selectExample(wrapper, button);
+      playExample(button, field.options[Number(button.dataset.choice)]);
     } else if (button.matches('[data-undo]') && previousAnswers.has(field.id)) {
+      finishAnswerReveal(input);
       input.value = previousAnswers.get(field.id);
       previousAnswers.delete(field.id);
       input.focus({ preventScroll: true });
@@ -547,7 +614,6 @@ editor.addEventListener('click', event => {
     stepNav.querySelector('[aria-current]').focus({ preventScroll: true });
     stepNav.closest('.route').scrollIntoView({ block: 'start' });
   }
-  if (button.matches('[data-edit]')) activateStage(activeStage);
   if (button.matches('[data-previous]') && stageIndex > 0) activateStage(stages[stageIndex - 1].id);
   if (button.matches('[data-continue]')) {
     const next = stages[stageIndex + 1] ?? stages.find(stage => !isStageComplete(stage));
