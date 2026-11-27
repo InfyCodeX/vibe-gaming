@@ -486,19 +486,20 @@ const galleryC = {
       tip: "Кадры, точки полутонов и линии движения превращают действие в комикс.",
       value: "Оформи игру как оригинальный цветной комикс. Используй полутоновые точки для теней, выразительный контур и линии скорости при движении. Для важных событий подойдут короткие комиксные вставки с возможностью пропуска.",
       art: `
-        <path d="m21 15 77-4 1 51-76 7z" fill="#f7e7c4"/>
-        <path d="m26 20 39-3-11 43-28 3z" fill="#9badbc"/>
-        <path d="m70 16 24-1v17l-29 2zm-6 23 30-3 1 20-37 4z" fill="#dba17d"/>
-        <path d="m29 48 10-7m-9 1 8-6m-6 19 12-11" stroke="#eae5ce"/>
-        <path d="m39 42 2-8 12-6 2 10-9 9z" fill="#e7c172"/>
-        <circle cx="49" cy="35" r="3.7" fill="#799ca8"/>
-        <path d="m36 45 3 1-5 8-3 1z" fill="#e5a071"/>
-        <path d="m72 25 5-2 1-4 4 4 5-1-2 4 3 2-7 1-4 3-1-4-5-1z" fill="#ffe2a0" stroke-width="1.4"/>
-        <path d="M69 48q7-10 17-3m-17 9q10-9 18-5" fill="none" stroke="#795f69"/>
-        <g fill="#a77d75" stroke="none">
-        <circle cx="88" cy="39" r="1.2"/>
-        <circle cx="91" cy="42" r="1.2"/>
-        <circle cx="89" cy="54" r="1.2"/>
+        <path d="M20 14l79-4 1 53-79 6Z" fill="#fff0cc"/>
+        <path d="M25 19l43-3-10 44-32 3Z" fill="#667a9a"/>
+        <path d="M73 16l21-1v18l-25 2Zm-5 24 26-2v20l-31 2Z" fill="#d99c99"/>
+        <path d="m28 44 8-6m-7 13 8-6m-3 12 9-9" fill="none" stroke="#d6e5e9"/>
+        <path d="M36 50q-1-7 4-9l4 4q-3 6-8 5Z" fill="#f5a46f"/>
+        <path d="M38 40l2-7 6-1q6-10 15-11-1 10-9 17l-2 7-7 3v-6Z" fill="#f8ca75"/>
+        <circle cx="51" cy="33" r="3.7" fill="#a5d7d2"/>
+        <path d="M78 26l-4-6 7 2 4-4 1 5 5 2-6 3-2 5-3-4-6 2Z" fill="#ffe6a1"/>
+        <circle cx="80" cy="48" r="6" fill="#bea5d7"/>
+        <path d="M71 52q-2-2 5-5t12-3q4 2-5 6-10 5-12 2Z" fill="none" stroke="#fff0cc"/>
+        <path d="M32 27h3m-1.5-1.5v3" fill="none" stroke="#ffdfa1"/>
+        <g fill="#9d637f" stroke="none">
+          <circle cx="72" cy="56" r="1"/><circle cx="76" cy="56" r="1"/><circle cx="78" cy="54" r="1"/>
+          <circle cx="87" cy="55" r="1"/><circle cx="90" cy="54" r="1"/><circle cx="90" cy="50" r="1"/>
         </g>`
     },
     {
@@ -506,15 +507,18 @@ const galleryC = {
       tip: "Вывески и детали светятся, а силуэты объектов остаются ясными.",
       value: "Оформи игру как ночную аркаду. Добавь мягкое янтарное и голубое свечение вокруг вывесок, отражения на мостовой и чёткие светлые края у важных предметов. Избегай резкого мерцания.",
       art: `
-        <path d="M22 16h74v49H22z" fill="#525667"/>
-        <path d="M26 58V36h13V24h14v34m15 0V30h12V20h11v38" fill="#6a697c"/>
-        <path d="M23 61q18-7 37-4 15-4 35-1v8H23z" fill="#777484"/>
-        <path d="m49 55 4-22 4-10h17l-5 12-2 15 5 6v5H46z" fill="#778897"/>
-        <path d="m57 28 2-3h11l-2 3zm-4 16 2-11h13l-2 11z" fill="#add2d1"/>
-        <path d="m51 48 14-1 4 4-17 1z" fill="#daa378"/>
-        <path d="m58 46 1-4m5 6 2-1" stroke="#bc786b"/>
-        <path d="M29 40h4m9-12h6m34-4h4M36 59l9-1m32 3 10-1" fill="none" stroke="#e8ae83"/>
-        <path d="M28 46h4m10-11h5m35-6h4m-32 34 14-1" fill="none" stroke="#a7ced4"/>`
+        <rect x="20" y="13" width="79" height="53" rx="4" fill="#444959"/>
+        <path d="M21 57V38h10V28h10v29m31 0V33h10V23h10v34" fill="#68677e"/>
+        <path d="M22 57l21-3 18 2 37-3v11H22Z" fill="#77768b"/>
+        <path d="M44 60V47l7-7V23l6-5h19l4 5v17l-6 9v11Z" fill="#83a6a8"/>
+        <path d="M74 49l6-9V23l-5 4v13l-7 9v11h6Z" fill="#547d86"/>
+        <path d="M54 23l4-3h14l2 4H54Zm0 5h19v12H54Z" fill="#444959"/>
+        <path d="M57 30h13v7H57Z" fill="#a5e0dc"/>
+        <path d="M59 35l2-2 2 2m4-2h1" fill="none" stroke="#547d86"/>
+        <path d="M50 41h24l-5 7H45Z" fill="#dda06f"/>
+        <path d="M56 44v-4m-2 0h4m5 4h3m-16 7h13" fill="none" stroke="#41475a"/>
+        <path d="M25 43h10m-9 4h4m55-19h4m-5 5h5m-56 27h8" fill="none" stroke="#f1bc8e"/>
+        <path d="M80 53h10m-6 4h8m-39 6h12" fill="none" stroke="#a5d9d4"/>`
     }
   ],
   effects: [

@@ -489,6 +489,8 @@ progress::-moz-progress-bar { background: var(--lime); border-radius: 1rem; }
 
 
 body {
+  min-height: 100vh;
+  min-height: 100dvh;
   background-color: var(--page);
   background-image:
     url('./assets/workshop-backdrop.svg'),
@@ -518,6 +520,33 @@ body {
 .cave-wall--right { right: 0; }
 .cave-wall svg { width: 100%; height: 100%; }
 .cave-wall--right svg { transform: scaleX(-1); }
+.cave-bee {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 27px;
+  z-index: 1;
+  pointer-events: none;
+}
+.cave-bee--rest { pointer-events: auto; }
+.cave-bee svg {
+  width: 100%;
+  height: 100%;
+  transform: scaleX(var(--bee-facing, 1));
+  filter: drop-shadow(0 1px 2px #4e32283d);
+}
+.cave-bee-wing {
+  transform-box: fill-box;
+  transform-origin: 25% 94%;
+  animation: bee-wings 160ms ease-in-out infinite alternate;
+}
+.cave-bee-wing--back { animation-delay: -65ms; }
+.cave-bee--rest .cave-bee-wing { animation: none; transform: scaleY(.5) rotate(15deg); }
+@keyframes bee-wings {
+  from { transform: rotate(-6deg) scaleY(1); }
+  to { transform: rotate(12deg) scaleY(.53); }
+}
 .cave-vine, .cave-lantern {
   transform-box: fill-box;
   transform-origin: center top;

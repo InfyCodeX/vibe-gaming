@@ -45,7 +45,7 @@
   }
 
   function berry(side, x, y, scale = 1) {
-    return `<g transform="translate(${x} ${y}) scale(${scale})">
+    return `<g data-bee-perch transform="translate(${x} ${y}) scale(${scale})">
       <circle r="13" fill="url(#${side}-amber)" opacity=".38"/>
       <path d="M-1-5q1-4 4-5" fill="none" stroke="#61764d" stroke-width="1.5"/>
       <path d="M-2-5C4-8 8-2 6 3 4 9-5 8-6 3-7-1-6-4-2-5Z" fill="url(#${side}-berry)" stroke="#aa7d48" stroke-width=".8"/>
@@ -149,7 +149,8 @@
   };
 
   for (const side of [left, right]) {
-    frame.insertAdjacentHTML('beforeend', `<div class="cave-wall cave-wall--${side}"><svg viewBox="0 0 160 950" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">${paints(side)}${stone(side)}${foliage[side]}</svg></div>`);
+    const moss = side === left ? '38 652' : '67 810';
+    frame.insertAdjacentHTML('beforeend', `<div class="cave-wall cave-wall--${side}"><svg viewBox="0 0 160 950" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">${paints(side)}${stone(side)}${foliage[side]}<g data-bee-perch transform="translate(${moss})"></g></svg></div>`);
   }
 
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
