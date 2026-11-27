@@ -17,26 +17,27 @@ const galleryA = (() => {
     if (motion) option.motion = motion;
     return option;
   };
-  function move(name, duration, transforms) {
-    return { selector: '.' + name, duration, frames: transforms.map(transform => ({ transform })) };
+  function move(name, duration, transforms, beats) {
+    const frames = transforms.map((transform, index) => beats ? {transform, offset: beats[index]} : {transform});
+    return {selector: '.' + name, duration, frames, easing: beats ? 'linear' : 'ease-in-out'};
   }
 
   const genre = [
     item('Платформер', 'Расстояние между островками подсказывает, когда прыгать.', 'Платформер с видом сбоку. Герой преодолевает пропасти и добирается до выхода.',
       path('M10 59h37l-4 11H18Z',amber)+path('M9 57q7-5 13-2t13 0q8-4 13 1v5H9Z',sage)+path('M78 44h32l-5 11H82Z',amber)+path('M77 42q9-6 16-2t17-1v6H77Z',sage)+path('M19 65h6m4 2h7m50-17h5m5 2h5','none','#986645')+star(74,24)+part('hopper',path('M34 49q-3-7 4-13l1-9 6 6 8-4 1 10q5 15-12 15Z',gold)+path('m40 30 3 4m7 0 2-2','none',rose)+dot(48,40,1.65,ink)+path('m51 45 4-1m-15 7 6 1','none',amber)+path('m34 48-6-3 1 7 7 1',gold)),
-      [move('hopper',850,['translate(0,0)','translate(14px,-16px) rotate(6deg)','translate(31px,-23px)','translate(46px,-13px)','translate(46px,-13px)'])]),
+      [move('hopper',1030,['translate(0,0)','translate(0,1px) scale(1.05,.94)','translate(16px,-17px) rotate(-5deg)','translate(31px,-22px)','translate(46px,-14px) scale(1.07,.91)','translate(46px,-14px)'],[0,.13,.34,.5,.75,1])]),
     item('Головоломка', 'Заметь закономерность и придумай ход, который изменит поле.', 'Головоломка с узорами. Игрок изучает расположение деталей и подбирает верный ход.',
       box(22,22,49,41,5,amber)+path('M26 26h15v11q9-5 10 3t-10 3v15H26Z',sage)+path('M45 26h21v12H54q3 8-3 10t-6-3v-2q7 1 7-5t-7-4Z',ivory)+path('M47 59V48q8 6 11 0l1-6h8v17Z',blue)+part('tile',path('M78 21h15v11q8-5 10 1t-9 6v13H78V41q-8 4-9-2t9-6Z',red)+shine('M82 25h7')),
-      [move('tile',850,['translate(0,0) rotate(8deg)','translate(0,-5px) rotate(0deg)','translate(-14px,5px)','translate(-14px,5px)'])]),
+      [move('tile',1030,['translate(0,0)','translate(-4px,-5px) rotate(9deg)','translate(-11px,0) rotate(3deg)','translate(-14px,5px) scale(1.03)','translate(-14px,5px)'],[0,.24,.55,.75,1])]),
     item('Гонки', 'Выбирай траекторию, чтобы пройти поворот быстрее.', 'Аркадные гонки с поворотами, контрольными воротами и честным сравнением времени.',
       path('M9 63h94m-83 5h17m43 0h22','none',navy)+part('racer',path('m24 48 11-3 13-15h24l12 16 12 4 1 10H23Z',red)+path('m43 44 9-10h17l8 10Z',blue)+path('M60 34v10m3 5h6')+path('m47 40 7-5m9 2 4-2','none','#cbeced')+path('M24 50h6v4h-7Zm64 0 7 1v4h-7Z',ivory)+path('M50 56h18','none','#a95845')+dot(40,59,8,ink)+dot(40,59,3,ivory)+dot(80,59,8,ink)+dot(80,59,3,ivory))+path('M13 39h12m-7 6h7','none',amber),
-      [move('racer',700,['translateX(0)','translateX(-9px) rotate(-2deg)','translateX(12px) rotate(1deg)','translateX(14px)'])]),
+      [move('racer',920,['translateX(0)','translateX(-8px) rotate(-2deg)','translateX(5px) rotate(-2deg)','translateX(14px) rotate(1.5deg)','translateX(14px) rotate(0deg)'],[0,.24,.4,.63,1])]),
     item('Приключение', 'Загляни в новую область и найди подсказку для пути дальше.', 'Приключение с исследованием мира, тайниками и небольшими заданиями.',
       path('m17 25 22-7 21 8 21-8 9 36-22 9-23-9-22 7Z',ivory)+path('m39 20 6 33m16-25 7 33','none',amber)+path('m26 43 6-11 8 8m12 3 5-8 7 8','none',leaf)+path('m29 52 5-4m3-2 4 1m4 2 4 1m4 0 5-3','none',navy)+dot(86,47,17,gold)+dot(86,47,12,blue)+path('M86 35v2m11 10h-2m-9 10v2m-10-12h-2','none',ivory)+part('north',path('m88 36 3 15-7-3Z',red)+path('m84 48 7 3-10 7Z',ivory)),
       [move('north',1000,['rotate(-35deg)','rotate(42deg)','rotate(-14deg)','rotate(5deg)','rotate(0deg)'])]),
     item('Ритм-игра', 'Нажимай в нужную долю, когда нота пересекает отметку.', 'Музыкальная ритм-игра. Ноты движутся к линии такта, а точное нажатие даёт очки.',
       path('M16 39h88m-88 8h88m-88 8h88','none',steel)+box(28,25,8,42,3,gold)+part('notes',oval(58,46,7,5,lilac)+oval(78,40,7,5,red)+path('M64 46V23l20-6v23m-20-12 20-6',navy))+star(96,33,3),
-      [move('notes',900,['translateX(7px)','translateX(-7px)','translateX(-23px) scale(1)','translateX(-23px) scale(1.12)','translateX(-23px) scale(1)'])]),
+      [move('notes',1020,['translateX(7px)','translateX(-7px)','translateX(-23px) scale(1)','translateX(-23px) scale(1.12)','translateX(-23px) scale(1)'],[0,.33,.68,.78,1])]),
     item('Стратегия', 'Расставь отряд и подумай, что может сделать соперник в ответ.', 'Пошаговая стратегия на клетках. Игрок располагает отряд и планирует несколько ходов вперёд.',
       path('m13 48 42-23 50 20-43 24Z',ivory)+path('m27 40 50 21m-36-29 49 21m-59 2 43-23m-27 29 43-23','none',amber)+path('m61 36 2-11-3-2v-8h5v4h4v-4h5v4h3v-4h5v8l-4 2 3 14Z',steel)+part('pawn',oval(40,48,9,4,leaf)+path('m33 46 4-10h6l4 10Z',sage)+dot(40,33,5,gold)),
       [move('pawn',1050,['translate(0,0)','translate(0,-7px)','translate(15px,-14px)','translate(15px,-7px)','translate(15px,-7px)'])]),
@@ -45,7 +46,7 @@ const galleryA = (() => {
       [move('sprout',1000,['scale(.65) translateY(4px)','scale(.95) rotate(-5deg)','scale(1.14) rotate(4deg)','scale(1.05)'])]),
     item('Раннер', 'Герой бежит сам. Твоя задача — вовремя уклоняться и прыгать.', 'Раннер с автоматическим бегом. Игрок меняет дорожку и перепрыгивает заранее видимые препятствия.',
       path('m19 64 40-43h13L50 64Zm39 0 18-43h7l9 43Z',steel)+path('m87 50 6-21 8 21Z',red)+box(84,50,20,4,1,amber)+part('runner',path('m44 26 10 5-8 15-11-5Z',blue)+dot(51,23,6,amber)+path('m39 42-9 8-7-1m21-4 7 7-5 8m-3-24-8 4-6-4m18-5 8 6 6-4'))+path('M18 37h10m-13 7h8','none',navy),
-      [move('runner',880,['translate(0,0)','translate(6px,-4px) rotate(4deg)','translate(9px,1px)','translate(16px,-5px) rotate(-4deg)','translate(21px,0)'])]),
+      [move('runner',930,['translate(0,0)','translate(5px,-3px) rotate(4deg)','translate(10px,1px) rotate(0deg)','translate(16px,-5px) rotate(-4deg)','translate(21px,0)'],[0,.22,.46,.74,1])]),
     item('Детектив', 'Сопоставь улики и проверь, какая версия объясняет их все.', 'Детективная игра с поиском улик и выбором версии событий по собранным фактам.',
       path('m23 22 32-5 8 42-33 6Z',ivory)+path('m30 31 15-2m-14 8 14-2m-13 8 9-1','none',navy)+oval(63,42,6,10,steel)+dot(68,29,3,steel)+part('lens',path('m81 46 13 12-5 6-13-14Z',amber)+dot(69,38,15,gold)+dot(69,38,11,'#b8dbe0')+shine('M61 37q0-6 6-7')),
       [move('lens',1250,['translate(9px,2px)','translate(-8px,-5px)','translate(-13px,5px)','translate(-5px,4px)','translate(-5px,4px)'])]),
@@ -152,10 +153,10 @@ const galleryA = (() => {
   const actions = [
     item('Двойной прыжок', 'Первый прыжок от земли. Пока герой опускается, второе нажатие позволяет подняться выше.', 'Герой бегает и прыгает. Между отрывом от земли и приземлением разрешён ровно один дополнительный прыжок.',
       path('M14 64h39v6H14Zm65-24h28v6H79Z',amber)+path('M14 64h39m26-24h28','none',leaf)+path('M19 68h5m3 0h5m53-24h5m3 0h5','none',ivory)+part('jumper',path('M25 56V45l6-5 9 2 6 7-1 10-7 4h-8Z',lilac)+path('M25 49h20l-3 5H28Z',navy)+path('m29 46 3-2 5 1','none',ivory)+dot(38,51,1.2,ivory)+path('m29 60-3 3m14-4 4 3'))+part('boost',path('m53 39 4 5 4-5m-9 6 5 4 5-4','none',amber)),
-      [move('jumper',1350,['translate(0,0)','translate(9px,-18px)','translate(19px,-24px)','translate(26px,-18px)','translate(35px,-35px)','translate(45px,-41px)','translate(54px,-24px)','translate(54px,-24px)']),{selector:'.boost',duration:1350,frames:[{opacity:.25},{offset:.39,opacity:.25},{offset:.5,opacity:1},{offset:.75,opacity:.15},{opacity:.25}]}]),
+      [move('jumper',1420,['translate(0,0)','translate(9px,-17px)','translate(19px,-24px)','translate(27px,-17px)','translate(37px,-33px)','translate(45px,-36px)','translate(54px,-24px) scale(1.06,.92)','translate(54px,-24px)'],[0,.17,.29,.45,.57,.68,.84,1]),{selector:'.boost',duration:1420,frames:[{opacity:.25},{offset:.41,opacity:.25},{offset:.49,opacity:1,transform:'scale(1.12)'},{offset:.75,opacity:.15},{opacity:.25}]}]),
     item('Рывок', 'Короткое ускорение перемещает героя вперёд. Затем способность должна восстановиться.', 'Игрок мгновенно ускоряется в выбранную сторону на короткое расстояние. После рывка есть перезарядка 3 секунды.',
       path('M18 59h83','none',steel)+path('m68 24 8 8-8 8m11-16 8 8-8 8','none',amber)+part('dashBody',path('m32 44 11-16 12 2 11 10-6 8-9-3-9 9-12-3Z',red)+path('m44 33 10 1 8 7-11-2Z',ivory)+path('m32 50-8 6 10 1 9-4',navy))+part('speed',path('M13 36h14m-16 7h12m-6 6h7','none',amber)),
-      [move('dashBody',760,['translate(0,0) rotate(0deg)','translate(-5px,2px) rotate(-5deg)','translate(31px,-1px) rotate(5deg)','translate(36px,0) rotate(0deg)','translate(36px,0)']),{selector:'.speed',duration:760,frames:[{opacity:.2},{offset:.21,opacity:1},{offset:.48,opacity:.95,transform:'scaleX(1.8)'},{opacity:0}]}]),
+      [move('dashBody',820,['translate(0,0)','translate(-5px,2px) rotate(-5deg)','translate(22px,-1px) rotate(5deg) scale(1.12,.93)','translate(36px,0)','translate(36px,0)'],[0,.27,.39,.55,1]),{selector:'.speed',duration:820,frames:[{opacity:.2},{offset:.24,opacity:.6},{offset:.39,opacity:1,transform:'scaleX(1.8)'},{offset:.64,opacity:.2},{opacity:0}]}]),
     item('Три в ряд', 'Обменяй соседние фишки, чтобы собрать одинаковые в линию.', 'Игрок меняет местами две соседние фишки. Ряд из трёх одинаковых исчезает, поле заполняется сверху.',
       box(22,15,76,49,5,ivory)+path('M47 16v47m26-47v47M23 40h74','none',steel)+dot(35,51,7,gold)+dot(60,51,7,gold)+path('m30 25 5-5 5 5-5 6Z',blue)+path('m55 28 5-6 5 6-5 6Z',lilac)+part('swapStar',dot(85,27,7,gold)+shine('m82 25 3-2'))+part('swapGem',path('m79 51 6-7 6 7-6 7Z',red)),
       [move('swapStar',940,['translateY(0)','translate(-3px,11px)','translateY(24px)','translateY(24px) scale(1.23)','translateY(24px) scale(.1)']),move('swapGem',940,['translateY(0)','translate(3px,-11px)','translateY(-24px)','translateY(-24px)','translateY(-24px)'])]),
@@ -167,16 +168,16 @@ const galleryA = (() => {
       [{selector:'.swing',duration:1350,frames:[{transformOrigin:'100% 0%',transform:'rotate(0deg)'},{transformOrigin:'100% 0%',transform:'rotate(12deg)'},{transformOrigin:'100% 0%',transform:'rotate(-45deg)'},{transformOrigin:'100% 0%',transform:'rotate(-70deg)'},{transformOrigin:'100% 0%',transform:'rotate(-52deg)'}]}]),
     item('Перенос ящика', 'Толкай ящик на плиту. Для толчка позади героя должно быть свободно.', 'Герой толкает по одному ящику на соседнюю свободную клетку. Ящик на нажимной плите открывает проход.',
       path('M15 61h90','none',steel)+path('m68 59 5-6h21l6 6Z',blue)+part('pushBox',box(37,36,23,23,2,amber)+path('m40 39 17 17m-17 0 17-17','none',ivory))+part('pushHand',path('m17 47 6-4 7 5 7 1-2 6H22l-7-4Z',rose))+path('M77 43h10m-4-4 4 4-4 4','none',navy),
-      [move('pushBox',1120,['translateX(0)','translateX(0)','translateX(16px)','translateX(16px)','translateX(32px)']),move('pushHand',1120,['translateX(-4px)','translateX(1px)','translateX(17px)','translateX(15px)','translateX(33px)'])]),
+      [move('pushBox',1240,['translateX(0)','translateX(0)','translateX(16px)','translateX(16px)','translateX(32px)','translateX(32px)'],[0,.22,.44,.55,.81,1]),move('pushHand',1240,['translateX(-4px)','translateX(1px)','translateX(17px)','translateX(15px)','translateX(33px)','translateX(29px)'],[0,.22,.44,.55,.81,1])]),
     item('Лучи и зеркала', 'Поворачивай зеркало, пока свет не попадёт на приёмник.', 'Игрок поворачивает зеркала дискретными шагами, чтобы направить луч от лампы к приёмнику.',
       box(16,41,16,14,3,amber)+dot(31,48,4,gold)+path('M35 48h24','none',amber)+part('mirror',path('m56 54 12-17 5 3-12 17Z',blue)+shine('m60 49 7-9'))+part('beam',path('m64 46 23-21','none',amber))+dot(90,22,7,navy)+dot(90,22,3,gold),
-      [move('mirror',900,['rotate(-60deg)','rotate(-60deg)','rotate(-30deg)','rotate(0deg)','rotate(0deg)']),{selector:'.beam',duration:900,frames:[{opacity:.08},{offset:.58,opacity:.08},{offset:.76,opacity:1},{opacity:1}]}]),
+      [move('mirror',1090,['rotate(-60deg)','rotate(-60deg)','rotate(-30deg)','rotate(-30deg)','rotate(0deg)','rotate(0deg)'],[0,.2,.39,.51,.68,1]),{selector:'.beam',duration:1090,frames:[{opacity:.08},{offset:.66,opacity:.08},{offset:.76,opacity:1},{opacity:1}]}]),
     item('Полёт на тяге', 'Импульс ранца поднимает героя, а при отпускании он снижается.', 'Игрок удерживает тягу для подъёма и отпускает для снижения. Запас энергии восстанавливается при посадке.',
       path('M18 64h31m28-10h25','none',steel)+part('jet',path('M47 42q-8-5-12 2l-1 13 11-5Z',amber)+path('M41 55q-1 9-8 12-1-8 3-14Z',gold)+path('M47 35q13-13 23-8 2 10-9 18l-14 5Z',ivory)+dot(58,35,4,blue)+path('m48 47-4 9m12-13 3 8'))+path('m82 34 5-8 5 8','none',navy),
       [move('jet',1250,['translate(0,0)','translate(6px,-16px) rotate(-6deg)','translate(10px,-10px) rotate(2deg)','translate(17px,-23px)','translate(22px,-13px) rotate(4deg)'])]),
     item('Магнитный захват', 'Предметы в радиусе магнита двигаются к герою.', 'Игрок на короткое время включает магнит. Только металлические предметы поблизости притягиваются к нему.',
       path('M29 24h11v17q6 15 16 2V25h12v19q-1 20-22 19-18-2-17-21Z',red)+path('M29 24h11v8H29Zm27 1h12v8H56Z',steel)+part('bolt',path('m82 32 5-7 8 3 1 8-7 5-7-3Z',navy)+dot(89,32,3,ivory))+part('nut',path('m85 52 4-5 7 3-2 5 3 2-3 4-8-5 2-3Z',steel)),
-      [move('bolt',900,['translate(0,0)','translate(-3px,-2px) rotate(15deg)','translate(-17px,-5px) rotate(65deg)','translate(-30px,-5px) rotate(110deg)']),move('nut',900,['translate(0,0)','translate(0,0)','translate(-9px,-6px) rotate(-18deg)','translate(-29px,-23px) rotate(-52deg)'])]),
+      [move('bolt',1080,['translate(0,0)','translate(-3px,-2px) rotate(15deg)','translate(-17px,-5px) rotate(65deg)','translate(-30px,-5px) rotate(110deg)','translate(-29px,-5px) rotate(110deg)'],[0,.23,.48,.73,1]),move('nut',1080,['translate(0,0)','translate(0,0)','translate(-9px,-6px) rotate(-18deg)','translate(-29px,-23px) rotate(-52deg)'],[0,.24,.57,1])]),
     item('Запомни узор', 'Посмотри, какие плитки мигнули, и повтори порядок.', 'Поле показывает последовательность вспышек. Игрок повторяет её касаниями, после успеха последовательность удлиняется.',
       box(31,13,61,51,7,navy)+part('padA',box(37,19,20,16,4,gold))+part('padB',box(64,19,21,16,4,blue))+part('padC',box(37,41,20,16,4,red))+box(64,41,21,16,4,lilac)+path('m42 27 4-4 5 5m20-2h6m-34 22h7','none',ivory),
       ['padA','padC','padB'].map((name,i)=>({selector:'.'+name,duration:320,delay:i*340,frames:[{filter:'brightness(1)'},{filter:'brightness(1.8)'},{filter:'brightness(1)'}]}))),

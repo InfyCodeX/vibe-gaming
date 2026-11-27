@@ -112,7 +112,7 @@ function renderOptions(field) {
     return `<div class="example" data-tone="${tones[index % tones.length]}">
       <button class="example-choice" draggable="true" type="button" data-choice="${index}" aria-describedby="${tipId}">
         <span class="touch-grip" aria-hidden="true">⠿</span>
-        ${cardIllustration(option.art, 'art-' + field.id + '-' + index)}
+        ${cardIllustration(option, field.id, 'art-' + field.id + '-' + index)}
         <span class="example-label">${option.title}</span>
       </button>
       <button class="info-button" type="button" aria-label="Объяснить пример «${option.title}»" aria-expanded="false" aria-controls="${tipId}">?</button>
@@ -396,7 +396,7 @@ function applyDroppedExample(wrapper, button) {
   }
 }
 
-function playExample(button, option) {
+function playExample(button, field, option) {
   if (!option.motion) return;
   closeTip(true);
   button.closest('.example').classList.add('tip-muted');
@@ -405,8 +405,17 @@ function playExample(button, option) {
     const element = button.querySelector(track.selector);
     if (!element?.animate) continue;
     for (const animation of element.getAnimations()) animation.cancel();
-    element.animate(track.frames, {duration: track.duration, delay: track.delay || 0, easing: 'ease-in-out'});
+    element.animate(track.frames, {duration: track.duration, delay: track.delay || 0, easing: track.easing || 'ease-in-out'});
   }
+  const timing = illustrationDetails[field.id][option.title][2];
+  if (timing === undefined) return;
+  const light = button.querySelector('.scene-light');
+  if (!light?.animate) return;
+  for (const animation of light.getAnimations()) animation.cancel();
+  const duration = Math.max(...option.motion.map(track => track.duration + (track.delay || 0)));
+  light.animate([{opacity: .58}, {opacity: 1}, {opacity: .62}], {
+    duration: 340, delay: Math.max(0, duration * timing - 130), easing: 'ease-out'
+  });
 }
 
 function cancelDrag() {
@@ -497,7 +506,7 @@ editor.addEventListener('pointerdown', event => {
   drag.ghost.setAttribute('aria-hidden', 'true');
   drag.ghost.dataset.tone = button.closest('.example').dataset.tone;
   const option = fieldsById.get(drag.wrapper.dataset.field).options[Number(button.dataset.choice)];
-  drag.ghost.innerHTML = cardIllustration(option.art, 'drag-art');
+  drag.ghost.innerHTML = cardIllustration(option, drag.wrapper.dataset.field, 'drag-art');
   const title = document.createElement('span');
   title.textContent = option.title;
   drag.ghost.append(title);
@@ -594,7 +603,7 @@ editor.addEventListener('click', event => {
       return;
     }
     if (button.matches('[data-choice]')) {
-      playExample(button, field.options[Number(button.dataset.choice)]);
+      playExample(button, field, field.options[Number(button.dataset.choice)]);
     } else if (button.matches('[data-undo]') && previousAnswers.has(field.id)) {
       finishAnswerReveal(input);
       input.value = previousAnswers.get(field.id);

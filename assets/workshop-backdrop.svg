@@ -1,23 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="950" viewBox="0 0 1600 950" fill="none">
-  <defs>
-    <linearGradient id="warm" x1="1450" y1="0" x2="1060" y2="520" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#be9657" stop-opacity=".54"/><stop offset="1" stop-color="#be9657" stop-opacity="0"/>
-    </linearGradient>
-    <linearGradient id="cool" x1="0" y1="560" x2="405" y2="935" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#788597" stop-opacity=".36"/><stop offset="1" stop-color="#788597" stop-opacity="0"/>
-    </linearGradient>
-  </defs>
-  <g stroke="url(#warm)">
-    <ellipse cx="1450" cy="142" rx="291" ry="192" transform="rotate(-21 1450 142)"/>
-    <ellipse cx="1450" cy="142" rx="326" ry="221" transform="rotate(-21 1450 142)" stroke-dasharray="2 7"/>
-    <ellipse cx="1450" cy="142" rx="363" ry="249" transform="rotate(-21 1450 142)"/>
-    <path d="M1361 0v98l-47 47h-83l-27 27v63m352 113h-79l-31 31h-80l-28 28h-128" stroke-width="1.4"/>
-    <circle cx="1204" cy="240" r="4"/><circle cx="1205" cy="407" r="4"/>
-    <path d="M1175 84v12m-6-6h12m321 258v14m-7-7h14"/>
-  </g>
-  <g stroke="url(#cool)">
-    <path d="M-89 657c96-104 168-91 265-47 155 71 179 158 130 271-16 38-20 65-10 89M-103 681c95-104 167-89 277-35 133 66 137 144 99 235-17 42-19 67-8 89M-121 711c114-101 176-78 284-26 114 55 110 114 78 196-16 39-17 63-4 89"/>
-    <path d="M0 792h96l23-23h93l36 36h93l28-28h41M0 819h96l23-23h74l35 35h101" stroke-dasharray="2 5"/>
-    <circle cx="414" cy="777" r="4"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+  <filter id="paper-grain" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".7" numOctaves="3" seed="12" stitchTiles="stitch"/>
+    <feColorMatrix type="matrix" values="0 0 0 0 .30  0 0 0 0 .25  0 0 0 0 .20  .065 .065 .065 0 -.044"/>
+  </filter>
+  <rect width="240" height="240" fill="#fff" filter="url(#paper-grain)"/>
 </svg>
