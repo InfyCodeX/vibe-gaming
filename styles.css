@@ -496,7 +496,7 @@ progress::-moz-progress-bar { background: var(--lime); border-radius: 1rem; }
 
 
 body { background: radial-gradient(ellipse at 62% 0, #fff 0, transparent 55rem), var(--page); }
-.topbar { position: sticky; top: 0; z-index: 12; background: #fcfcf9f7; color: var(--ink); border-bottom: 1px solid #d4d3ce; box-shadow: 0 3px 18px #20202b09; }
+.topbar { position: sticky; top: 0; z-index: 12; background: #fcfcf9; color: var(--ink); border-bottom: 1px solid #d4d3ce; box-shadow: 0 3px 18px #20202b09; }
 .topbar-inner { min-height: 4.55rem; }
 .brand { gap: .72rem; font-size: 1.5rem; letter-spacing: -.055em; }
 .brand img { width: 2.75rem; height: 2.75rem; border-radius: .66rem; box-shadow: 0 2px 8px #b2884833; }

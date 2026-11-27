@@ -207,7 +207,8 @@ function focusWorkspace() {
   const heading = editor.querySelector('h2');
   heading.focus({ preventScroll: true });
   const { top, bottom } = heading.getBoundingClientRect();
-  if (top < 10 || bottom > window.innerHeight * 0.75) {
+  const headerBottom = document.querySelector('.topbar').getBoundingClientRect().bottom;
+  if (matchMedia('(max-width: 52rem)').matches || top < headerBottom + 8 || bottom > window.innerHeight * 0.75) {
     document.querySelector('#workspace').scrollIntoView({ block: 'start' });
   }
 }
